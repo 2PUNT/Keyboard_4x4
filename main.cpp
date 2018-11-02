@@ -8,7 +8,7 @@ class KeyboardListener_CoutDummy: public IKeyboardListener{
 public:
 	KeyboardListener_CoutDummy(){};
 	void KeyboardKeyPressed(char c) override{
-		hwlib::cout << "Character pressed: " << c << '\n';
+		hwlib::cout << c << '\n';
 	}
 };
 
@@ -18,35 +18,23 @@ int main(void){
 	WDT->WDT_MR = WDT_MR_WDDIS;
 	hwlib::wait_ms(500);
 	
-	hwlib::target::pin_oc keypadMatrix_out0 = hwlib::target::pin_oc(hwlib::target::pins::a11); //4
-	hwlib::target::pin_oc keypadMatrix_out1 = hwlib::target::pin_oc(hwlib::target::pins::a10); //5
-	hwlib::target::pin_oc keypadMatrix_out2 = hwlib::target::pin_oc(hwlib::target::pins::a9); //6
-	hwlib::target::pin_oc keypadMatrix_out3 = hwlib::target::pin_oc(hwlib::target::pins::a8); //7
+	namespace target = hwlib::target;
+	auto out0 = target::pin_oc( target::pins::a0 );
+	auto out1 = target::pin_oc( target::pins::a1 );
+	auto out2 = target::pin_oc( target::pins::a2 );
+	auto out3 = target::pin_oc( target::pins::a3 );
 	
-	hwlib::port_oc_from_pins keypadMatrix_openCollectorPort = hwlib::port_oc_from_pins(
-		keypadMatrix_out0,
-		keypadMatrix_out1,
-		keypadMatrix_out2,
-		keypadMatrix_out3
-	);
+	auto in0  = target::pin_in( target::pins::a4 );
+	auto in1  = target::pin_in( target::pins::a5 );
+	auto in2  = target::pin_in( target::pins::a6 );
+	auto in3  = target::pin_in( target::pins::a7 );
 	
-	hwlib::target::pin_in keypadMatrix_in0 = hwlib::target::pin_in(hwlib::target::pins::a7); //3
-	hwlib::target::pin_in keypadMatrix_in1 = hwlib::target::pin_in(hwlib::target::pins::a6); //2
-	hwlib::target::pin_in keypadMatrix_in2 = hwlib::target::pin_in(hwlib::target::pins::a5); //1
-	hwlib::target::pin_in keypadMatrix_in3 = hwlib::target::pin_in(hwlib::target::pins::a4); //0
+	auto out_port = hwlib::port_oc_from_pins( out0, out1, out2, out3 );
+	auto in_port  = hwlib::port_in_from_pins( in0,  in1,  in2,  in3  );
+	auto matrix   = hwlib::matrix_of_switches( out_port, in_port );
+	auto keypad   = hwlib::keypad< 16 >( matrix, "123A456B789C*0#D" );
 	
-	hwlib::port_in_from_pins keypadMatrix_inputPort = hwlib::port_in_from_pins(
-		keypadMatrix_in0,
-		keypadMatrix_in1,
-		keypadMatrix_in2,
-		keypadMatrix_in3
-	);
-	
-	hwlib::matrix_of_switches keypadMatrix = hwlib::matrix_of_switches(keypadMatrix_openCollectorPort, keypadMatrix_inputPort);
-	
-	hwlib::keypad<16> keypad = hwlib::keypad<16>(keypadMatrix, "D#0*C987B654A321");
-	
-	Keyboard_4x4 keyboard = Keyboard_4x4<1>(keypad, 0, "TheKeyBoard");
+	auto keyboard = Keyboard_4x4<1>(keypad, 0, "TheKeyBoard");
 	
 	KeyboardListener_CoutDummy keyBoardDummy = KeyboardListener_CoutDummy();
 	IKeyboardListener* keyBoardDummyBase = &keyBoardDummy;
