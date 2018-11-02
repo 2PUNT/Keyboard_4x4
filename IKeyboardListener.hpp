@@ -3,7 +3,7 @@
 
 class IKeyboardListener{
 public:
-	virtual void KeyboardKeyPressed(char c) = 0;
+	virtual void KeyboardKeyPressed(char Key) = 0;
 };
 
 #endif

@@ -7,7 +7,7 @@
 class KeyboardListener_CoutDummy: public IKeyboardListener{
 public:
 	KeyboardListener_CoutDummy(){};
-	void KeyboardKeyPressed(char c) override{
+	void KeyboardKeyPressed(char Key) override{
 		hwlib::cout << c << '\n';
 	}
 };
