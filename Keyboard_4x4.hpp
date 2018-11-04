@@ -6,7 +6,7 @@
 
 #include "IKeyboardListener.hpp"
 
-// Template parameter N is the amount of listeners
+// Template parameter N is the max amount of listeners
 template<int N>
 class Keyboard_4x4: public rtos::task<>{
 private:
