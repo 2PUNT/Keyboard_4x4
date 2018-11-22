@@ -7,6 +7,8 @@
 #include "IKeyboardListener.hpp"
 
 // Template parameter N is the max amount of listeners
+///@class Keyboard_4x4 A class that represents a 4x4 keyboard.
+/// This class is a task, and will poll the keyBoard and let the listeners know that a key has been pressed by calling the function KeyboardKeyPressed()
 template<int N>
 class Keyboard_4x4: public rtos::task<>{
 private:
